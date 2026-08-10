@@ -226,3 +226,5 @@ pyrightconfig.json
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,macos,python
+# Local reference PDFs opened alongside the repository in VS Code
+pdf/
