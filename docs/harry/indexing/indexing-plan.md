@@ -63,7 +63,7 @@ artifacts/             # 생성물 (gitignore)
 **Interfaces:**
 - Produces: `DOCS: dict[str, tuple[str, str, str]]` (문서명 → 파일명, 시행일, 마커 방식), `parse_document(name: str, data_dir: Path) -> ParsedDoc`, `ParsedDoc(name, effective_date, marker, sha256, articles: list[Article], footer: dict)`, `Article(doc, n, title, chapter, lines)` with `.text` property
 
-- [ ] **Step 1: 의존성과 pytest 설정**
+- [x] **Step 1: 의존성과 pytest 설정**
 
 ```bash
 uv add numpy scikit-learn pytest
@@ -78,7 +78,7 @@ pythonpath = ["src"]
 
 `.gitignore`에 `artifacts/` 한 줄 추가.
 
-- [ ] **Step 2: 실패하는 테스트 작성**
+- [x] **Step 2: 실패하는 테스트 작성**
 
 ```python
 # tests/test_parse.py
@@ -154,12 +154,12 @@ def test_normalization(docs):
             assert ch not in full, f"{d.name}: {ch!r} 잔존"
 ```
 
-- [ ] **Step 3: 실패 확인**
+- [x] **Step 3: 실패 확인**
 
 Run: `uv run pytest tests/test_parse.py -q`
 Expected: FAIL — `ModuleNotFoundError: indexing`
 
-- [ ] **Step 4: 구현**
+- [x] **Step 4: 구현**
 
 ```python
 # src/indexing/parse.py
@@ -254,7 +254,7 @@ def parse_document(name: str, data_dir: Path) -> ParsedDoc:
 - `공고일자`/`시행일자` 줄을 본문에서 분리하지 않으면 마지막 조 본문에 섞인다. `FOOTER`가 이를 막는다.
 - 위치정보 약관 제16조의 사업자 정보(주소·전화·책임자)는 정식 조문이므로 유지한다. 현재 working tree에 남은 노이즈는 제16조 뒤 2줄이다. 저장소 기준 원문에는 제7조 뒤 UI 링크와 통합 약관 시행일 뒤 고객센터 안내도 있으므로 네 문구를 모두 exact match로 제외한다. 이로써 두 원문 상태의 정규화 본문은 같고, 어느 상태에서도 정상 조문을 부분 문자열로 삭제하지 않는다.
 
-- [ ] **Step 5: 통과 확인 후 커밋**
+- [x] **Step 5: 통과 확인 후 커밋**
 
 Run: `uv run pytest tests/test_parse.py -q`
 Expected: PASS (8 tests)
@@ -276,7 +276,7 @@ git commit -m "feat: 약관 4종 문서별 분기 파서 구현"
 - Consumes: `parse.ParsedDoc`, `parse.Article`
 - Produces: `build_units(docs: list[ParsedDoc]) -> tuple[list[Article], list[Unit]]`, `Unit(parent: int, order: int, text: str, embed_text: str)` — `parent`는 전역 articles 리스트 인덱스
 
-- [ ] **Step 1: 실패하는 테스트 작성**
+- [x] **Step 1: 실패하는 테스트 작성**
 
 ```python
 # tests/test_chunk.py
@@ -340,12 +340,12 @@ def test_numdot_is_unit_head_only_in_tonghap(parsed):
     assert all(u.text[0] in "①②③④⑤⑥⑦⑧⑨⑩" for u in acct12)
 ```
 
-- [ ] **Step 2: 실패 확인**
+- [x] **Step 2: 실패 확인**
 
 Run: `uv run pytest tests/test_chunk.py -q`
 Expected: FAIL — `ModuleNotFoundError: indexing.chunk`
 
-- [ ] **Step 3: 구현**
+- [x] **Step 3: 구현**
 
 ```python
 # src/indexing/chunk.py
@@ -391,7 +391,7 @@ def build_units(docs: list[ParsedDoc]) -> tuple[list[Article], list[Unit]]:
     return articles, units
 ```
 
-- [ ] **Step 4: 통과 확인 후 커밋**
+- [x] **Step 4: 통과 확인 후 커밋**
 
 Run: `uv run pytest tests/test_chunk.py -q`
 Expected: PASS (5 tests). 문서별 47/43/63/76, 합계 229가 정확히 일치해야 한다.
@@ -413,7 +413,7 @@ git commit -m "feat: 항 단위 청커와 부모 조 매핑 구현"
 - Consumes: `parse.ParsedDoc`, `chunk.build_units`
 - Produces: `validate(docs: list[ParsedDoc], articles: list[Article], units: list[Unit], gold_pairs: set[tuple[str, int]]) -> list[str]` (빈 리스트 = 통과), `build_snapshot(data_dir: Path, out_path: Path) -> dict` — 스냅샷 스키마는 아래 JSON 형태
 
-- [ ] **Step 1: 실패하는 테스트 작성**
+- [x] **Step 1: 실패하는 테스트 작성**
 
 ```python
 # tests/test_validate.py
@@ -479,12 +479,12 @@ def test_build_snapshot(tmp_path):
     assert all(0 <= u["parent"] < 72 for u in loaded["units"])
 ```
 
-- [ ] **Step 2: 실패 확인**
+- [x] **Step 2: 실패 확인**
 
 Run: `uv run pytest tests/test_validate.py -q`
 Expected: FAIL — `ModuleNotFoundError: indexing.validate`
 
-- [ ] **Step 3: 구현**
+- [x] **Step 3: 구현**
 
 ```python
 # src/indexing/validate.py
@@ -625,12 +625,12 @@ if __name__ == "__main__":
     build_snapshot(Path("data"), Path("artifacts/terms_snapshot.json"))
 ```
 
-- [ ] **Step 4: 통과 확인 + 실제 빌드**
+- [x] **Step 4: 통과 확인 + 실제 빌드**
 
 Run: `uv run pytest tests/ -q` — 전체 PASS
 Run: `uv run python -m indexing.build` — `조 72 / 항 229 → artifacts/terms_snapshot.json` 출력 확인
 
-- [ ] **Step 5: 커밋**
+- [x] **Step 5: 커밋**
 
 ```bash
 git add src/indexing/validate.py src/indexing/build.py tests/test_validate.py
@@ -649,7 +649,7 @@ git commit -m "feat: 검증 게이트와 terms_snapshot 빌드 추가"
 - Consumes: `artifacts/terms_snapshot.json`, `data/gold_questions_public10.json`
 - Produces: `sparse_ranker(snapshot) -> Callable[[str], np.ndarray]`, `evaluate(rank_fn, snapshot, questions) -> dict` — 키 `hit@1 hit@3 hit@5 all_gold_recall@1 all_gold_recall@3 all_gold_recall@4 all_gold_recall@5 MRR`
 
-- [ ] **Step 1: 실패하는 계약·다중 정답 지표 테스트 작성**
+- [x] **Step 1: 실패하는 계약·다중 정답 지표 테스트 작성**
 
 ```python
 # tests/test_eval_retrieval.py
@@ -699,12 +699,12 @@ def test_all_gold_recall_does_not_collapse_multi_gold_to_hit():
     assert result["all_gold_recall@3"] == 1.0
 ```
 
-- [ ] **Step 2: 실패 확인**
+- [x] **Step 2: 실패 확인**
 
 Run: `uv run pytest tests/test_eval_retrieval.py -q`
 Expected: FAIL — `ModuleNotFoundError: indexing.eval_retrieval`
 
-- [ ] **Step 3: 구현**
+- [x] **Step 3: 구현**
 
 ```python
 # src/indexing/eval_retrieval.py
@@ -771,13 +771,13 @@ if __name__ == "__main__":
     main()
 ```
 
-- [ ] **Step 4: 테스트와 기준선 실행**
+- [x] **Step 4: 테스트와 기준선 실행**
 
 Run: `uv run pytest tests/test_eval_retrieval.py -q` — PASS (2 tests)
 Run: `uv run python -m indexing.eval_retrieval`
 Expected: 지표 딕셔너리 출력, 오류 없음. 출력 값을 이 문서 하단 "실측 기록"에 그대로 붙여넣는다.
 
-- [ ] **Step 5: 커밋**
+- [x] **Step 5: 커밋**
 
 ```bash
 git add src/indexing/eval_retrieval.py tests/test_eval_retrieval.py
@@ -796,7 +796,7 @@ git commit -m "feat: 희소 검색 기준선 평가 추가"
 - Consumes: Task 4의 `evaluate`, `article_ranking`
 - Produces: `dense_ranker(snapshot, model_name, revision, query_prefix="", passage_prefix="") -> Callable[[str], np.ndarray]`; 반환 함수의 `truncated_units` 속성에 모델 최대 길이를 넘는 청크를 기록
 
-- [ ] **Step 1: sentence-transformers 설치**
+- [x] **Step 1: sentence-transformers 설치**
 
 ```bash
 uv add sentence-transformers
@@ -804,7 +804,7 @@ uv add sentence-transformers
 
 macOS에서 torch가 함께 설치된다. 실패 시 `uv add torch sentence-transformers`로 분리 설치.
 
-- [ ] **Step 2: dense_ranker 추가**
+- [x] **Step 2: dense_ranker 추가**
 
 `eval_retrieval.py`에 추가:
 
@@ -928,12 +928,12 @@ def main():
     print("selected:", json.dumps(selection, ensure_ascii=False))
 ```
 
-- [ ] **Step 3: 비교 실행**
+- [x] **Step 3: 비교 실행**
 
 Run: `uv run python -m indexing.eval_retrieval`
 Expected: 세 줄 출력. 최초 실행은 모델 다운로드(bge-m3 약 2.3GB)로 수 분 소요.
 
-- [ ] **Step 4: 모델 확정 — 결정 규칙**
+- [x] **Step 4: 모델 확정 — 결정 규칙**
 
 공개 파일은 10문항이지만 P02가 3개 정답 조문을 가지므로, 하나만 회수해도 만점이 되는 `hit@3`를 모델 선택의 주 지표로 쓰지 않는다. 또한 “1문항 차이는 잡음”이라는 통계적 근거 없는 임계값을 두지 않는다. 아래 순서로 기계적으로 결정한다.
 
@@ -942,7 +942,7 @@ Expected: 세 줄 출력. 최초 실행은 모델 다운로드(bge-m3 약 2.3GB)
 3. **완전 동률:** 위 세 지표가 모두 같을 때만 전체 229개 인코딩 시간과 임베딩 바이트 수가 작은 모델을 선택한다. e5-base가 절단 게이트를 통과한 경우에만 이 자원 우위를 사용할 수 있다.
 4. 각 후보의 resolved Hugging Face revision, 접두어, `truncated_units`, 인코딩 시간·바이트 수, 집계 지표를 `selected_model.json.candidates`에 함께 기록한다. 작은 공개셋에서 얻은 승패를 통계적 유의성으로 표현하지 않는다.
 
-- [ ] **Step 5: 실측 기록 후 커밋**
+- [x] **Step 5: 실측 기록 후 커밋**
 
 아래 "실측 기록" 표를 채우고 확정 모델명·resolved revision·접두어·절단 청크 수를 명시한다.
 
@@ -963,7 +963,7 @@ git commit -m "feat: 밀집 모델 비교 평가 및 임베딩 모델 확정"
 - Consumes: `artifacts/terms_snapshot.json`, Task 5가 생성한 `artifacts/selected_model.json`
 - Produces: `build_dense_index(...) -> dict`, `artifacts/dense_embeddings.npy`, `artifacts/dense_parents.npy`, `artifacts/dense_index_manifest.json`
 
-- [ ] **Step 1: 실패하는 직렬화·무결성 테스트 작성**
+- [x] **Step 1: 실패하는 직렬화·무결성 테스트 작성**
 
 ```python
 # tests/test_embed.py
@@ -1010,12 +1010,12 @@ def test_save_dense_index_records_reproducibility_metadata(tmp_path):
     ).hexdigest()
 ```
 
-- [ ] **Step 2: 실패 확인**
+- [x] **Step 2: 실패 확인**
 
 Run: `uv run pytest tests/test_embed.py -q`
 Expected: FAIL — `ModuleNotFoundError: indexing.embed`
 
-- [ ] **Step 3: 구현**
+- [x] **Step 3: 구현**
 
 ```python
 # src/indexing/embed.py
@@ -1121,7 +1121,7 @@ if __name__ == "__main__":
     main()
 ```
 
-- [ ] **Step 4: 단위 테스트와 실제 확정 모델 빌드**
+- [x] **Step 4: 단위 테스트와 실제 확정 모델 빌드**
 
 Run: `uv run pytest tests/test_embed.py -q` — PASS (1 test)
 
@@ -1133,7 +1133,7 @@ uv run python -m indexing.embed
 
 Expected: manifest의 `rows`가 229이고, `snapshot_sha256`·`model_revision`·두 `.npy` SHA-256이 채워진다. `dense_embeddings.npy`는 float32이며 모든 행의 L2 norm이 1이다.
 
-- [ ] **Step 5: 전체 회귀 테스트 후 커밋**
+- [x] **Step 5: 전체 회귀 테스트 후 커밋**
 
 Run: `uv run pytest tests/ -q` — 전체 PASS
 
@@ -1179,6 +1179,45 @@ bge-m3가 이긴 지표는 hit@1(0.9→1.0)과 MRR(0.95→1.0), 즉 **1문항 �
 3. 공개 10문항에서 sparse / e5-base / bge-m3의 Hit·all-gold Recall·MRR과 절단 감사 결과가 위 표에 기록됨
 4. 임베딩 모델이 결정 규칙에 따라 확정되고 모든 후보의 resolved revision·접두어·절단 감사·지표와 선택 결과가 `artifacts/selected_model.json`에 기록됨
 5. `uv run python -m indexing.embed`가 229행 float32 L2 정규화 임베딩과 부모 배열, 스냅샷·모델·배열 해시 manifest를 생성
+
+## 실행 이력 (2026-08-10 완료)
+
+Task 1~6 전부 실행 완료. **테스트 22개 전부 통과**, 완료 조건 5개 전부 충족.
+
+| Task | 커밋 | 결과 |
+| --- | --- | --- |
+| 1 파서 | `60625d6` | 8 tests PASS |
+| 2 청커 | `d423476` | 5 tests PASS, 47/43/63/76 = 229 정확 일치 |
+| 3 검증·빌드 | `44b54b0` | 6 tests PASS, `조 72 / 항 229` 게이트 통과 |
+| 4 희소 기준선 | `b55bbcc` | 2 tests PASS, MRR 0.950 |
+| 5 모델 확정 | `65cf729` | bge-m3 확정 (e5-base 절단 게이트 실패) |
+| 6 임베딩 | `690b8b9` | 1 test PASS, 229×1024 float32 생성 |
+
+### 계획과 달라진 점 2건
+
+1. **`카카오_통합서비스약관` 파일에 `.txt` 확장자가 붙었다.** 실행 시점에 원문 파일명이
+   `카카오_통합서비스약관.txt`로 바뀌어 있어 `DOCS` 매핑을 그에 맞게 고쳤다. Global Constraints와
+   Task 1 코드 블록의 "확장자 없음" 주석은 이 시점부로 사실이 아니다. 다만 **glob 금지·명시 매핑
+   원칙은 그대로 유지**한다 — 이유가 확장자에서 "문서명↔파일명 계약"으로 바뀌었을 뿐이다.
+2. **`pyproject.toml`에 `[build-system]`(hatchling) + `[tool.hatch.build.targets.wheel]`을 추가했다.**
+   계획은 `pythonpath = ["src"]`(pytest 전용)만 두었는데, 그러면 `uv run python -m indexing.build`가
+   `ModuleNotFoundError`로 실패한다. pytest는 통과하고 CLI만 깨지는 상태였다. src 레이아웃을
+   패키지로 선언해 양쪽 모두 동작하게 했다.
+
+### 생성된 아티팩트 (`artifacts/`, gitignore)
+
+| 파일 | 크기 | 내용 |
+| --- | ---: | --- |
+| `terms_snapshot.json` | 395KB | 72조 + 229항, 문서별 원문 SHA-256 |
+| `selected_model.json` | 1.8KB | 확정 모델 + 두 후보 전체 지표·절단·비용 |
+| `dense_embeddings.npy` | 938KB | 229 × 1024 float32, L2 정규화 |
+| `dense_parents.npy` | 2KB | 229개 부모 조 인덱스 (int64) |
+| `dense_index_manifest.json` | 491B | 스냅샷·모델 revision·배열 SHA-256 |
+
+스냅샷 SHA-256 `e919bd50901557c33b5fbbe687744298b81417c4df05411e0747af3f79ce71dc`
+임베딩 SHA-256 `bab48a740319aa898665e4c13d107a1e6bffa96850d3d8d3001e0f6cb5f50a55`
+
+재생성: `uv run python -m indexing.build && uv run python -m indexing.eval_retrieval && uv run python -m indexing.embed`
 
 ## 비범위 (다음 계획)
 

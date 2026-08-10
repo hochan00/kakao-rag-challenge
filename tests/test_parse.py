@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from indexing.parse import DOCS, parse_document
+from indexing.parse import DOCS, NOISE, normalize_line, parse_document
 
 DATA = Path(__file__).parent.parent / "data"
 EXPECTED_COUNTS = {
@@ -46,6 +46,30 @@ def test_noise_removed(docs):
     assert "자세히 보기" not in full
     assert "바로가기" not in full
     assert "<시행일자>" not in full
+
+
+def test_noise_regex_matches_only_known_raw_lines():
+    # 현재 working tree에는 current만, 저장소 기준 원문에는 current+legacy가 있다.
+    # 어느 상태에서도 알려진 UI/푸터 문구 외의 정상 조문을 제거하면 안 된다.
+    matched = []
+    for name, (fname, _, _) in DOCS.items():
+        for raw_line in (DATA / fname).read_text(encoding="utf-8").splitlines():
+            line = normalize_line(raw_line)
+            if NOISE.fullmatch(line):
+                matched.append((name, line))
+    current = {
+        ("카카오 위치정보 이용약관", "위치정보 전용문의 게시판 (바로가기)"),
+        ("카카오 위치정보 이용약관", "<시행일자>"),
+    }
+    legacy = current | {
+        ("카카오 위치정보 이용약관", "위치정보 제공 현황 자세히 보기"),
+        (
+            "카카오 통합 약관",
+            "서비스(위치기반서비스 포함) 관련 문의사항이 있으시면 언제든지 "
+            "고객센터에 방문 또는 연락해 주시기 바랍니다.",
+        ),
+    }
+    assert set(matched) in (current, legacy)
 
 
 def test_footer_not_in_body(docs):
