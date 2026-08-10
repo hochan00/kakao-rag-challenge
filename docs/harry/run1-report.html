@@ -1,0 +1,753 @@
+<title>14조 결과기 1차 테스트 기술 보고서</title>
+<style>
+:root {
+  --ground:      #FAFBFC;
+  --surface:     #FFFFFF;
+  --surface-alt: #F1F4F6;
+  --ink:         #12171D;
+  --ink-soft:    #3D4954;
+  --ink-mute:    #6B7682;
+  --rule:        #DBE1E6;
+  --rule-soft:   #E9EDF0;
+  --petrol:      #0B5A6B;
+  --petrol-soft: #E2EFF2;
+  --rust:        #A2452B;
+  --rust-soft:   #F7E9E4;
+  --moss:        #2E6B4C;
+  --moss-soft:   #E3F0E9;
+  --code-bg:     #F1F4F6;
+
+  --sans: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+          system-ui, -apple-system, "Segoe UI", sans-serif;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia,
+           "Apple SD Gothic Neo", "Noto Serif KR", serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground:      #0D1216;
+    --surface:     #141B21;
+    --surface-alt: #1A232A;
+    --ink:         #E3E9ED;
+    --ink-soft:    #B3BEC7;
+    --ink-mute:    #7E8B96;
+    --rule:        #263139;
+    --rule-soft:   #1C252C;
+    --petrol:      #61B6C8;
+    --petrol-soft: #12303A;
+    --rust:        #DD8A72;
+    --rust-soft:   #331D16;
+    --moss:        #7CC0A0;
+    --moss-soft:   #16291F;
+    --code-bg:     #1A232A;
+  }
+}
+:root[data-theme="dark"] {
+  --ground:      #0D1216;
+  --surface:     #141B21;
+  --surface-alt: #1A232A;
+  --ink:         #E3E9ED;
+  --ink-soft:    #B3BEC7;
+  --ink-mute:    #7E8B96;
+  --rule:        #263139;
+  --rule-soft:   #1C252C;
+  --petrol:      #61B6C8;
+  --petrol-soft: #12303A;
+  --rust:        #DD8A72;
+  --rust-soft:   #331D16;
+  --moss:        #7CC0A0;
+  --moss-soft:   #16291F;
+  --code-bg:     #1A232A;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+/* ── masthead ─────────────────────────────────────── */
+.masthead { display: flex; flex-direction: column; gap: 1.25rem; }
+.kicker {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--petrol);
+}
+.masthead h1 {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 0;
+  text-wrap: balance;
+}
+.dek {
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  max-width: 46ch;
+  margin: 0;
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--ink-mute);
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+}
+.meta b { color: var(--ink-soft); font-weight: 500; }
+
+/* ── headline metrics ─────────────────────────────── */
+.scoreboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.score { background: var(--surface); padding: 1.1rem 1.25rem; }
+.score dt {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 0.35rem;
+}
+.score dd {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: var(--petrol);
+  line-height: 1.1;
+}
+.score dd small {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--ink-mute);
+  margin-top: 0.2rem;
+}
+
+/* ── sections ─────────────────────────────────────── */
+section { display: flex; flex-direction: column; gap: 1.25rem; }
+section > h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+  margin: 0;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid var(--ink);
+  font-size: 1.3rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+section > h2 .num {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: var(--petrol);
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+h3 {
+  margin: 1rem 0 0;
+  font-size: 1rem;
+  font-weight: 650;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+}
+p { margin: 0; max-width: 68ch; }
+p + p { margin-top: -0.35rem; }
+strong { font-weight: 650; }
+em { font-style: normal; color: var(--petrol); font-weight: 600; }
+
+ul, ol { margin: 0; padding-left: 1.3rem; max-width: 68ch; display: flex; flex-direction: column; gap: 0.4rem; }
+li::marker { color: var(--ink-mute); }
+
+/* ── tables ───────────────────────────────────────── */
+.tablewrap {
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--surface);
+}
+table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+caption {
+  caption-side: top;
+  text-align: left;
+  padding: 0.7rem 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  border-bottom: 1px solid var(--rule);
+  background: var(--surface-alt);
+}
+th, td {
+  padding: 0.6rem 0.9rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule-soft);
+  line-height: 1.55;
+}
+thead th {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  white-space: nowrap;
+  border-bottom: 1px solid var(--rule);
+}
+tbody tr:last-child td { border-bottom: none; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.pick td { background: var(--petrol-soft); }
+tr.pick td:first-child { box-shadow: inset 3px 0 0 var(--petrol); }
+td.mono, th.mono { font-family: var(--mono); font-size: 0.8rem; }
+
+/* ── chips ────────────────────────────────────────── */
+.chip {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  padding: 0.12rem 0.5rem;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.chip.ok   { background: var(--moss-soft); color: var(--moss); }
+.chip.warn { background: var(--rust-soft); color: var(--rust); }
+.chip.info { background: var(--petrol-soft); color: var(--petrol); }
+
+/* ── code ─────────────────────────────────────────── */
+pre {
+  margin: 0;
+  padding: 1rem 1.1rem;
+  background: var(--code-bg);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+code {
+  font-family: var(--mono);
+  font-size: 0.86em;
+  background: var(--code-bg);
+  padding: 0.08em 0.35em;
+  border-radius: 2px;
+  color: var(--ink);
+}
+pre code { background: none; padding: 0; font-size: inherit; }
+
+/* ── callout ──────────────────────────────────────── */
+.note {
+  border-left: 3px solid var(--rust);
+  background: var(--rust-soft);
+  padding: 0.9rem 1.1rem;
+  border-radius: 0 3px 3px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.note.calm { border-left-color: var(--petrol); background: var(--petrol-soft); }
+.note p { max-width: 64ch; font-size: 0.94rem; }
+.note .label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rust);
+}
+.note.calm .label { color: var(--petrol); }
+
+/* ── pipeline diagram ─────────────────────────────── */
+.flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--surface);
+}
+.flow-step {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: 1rem;
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid var(--rule-soft);
+  align-items: baseline;
+}
+.flow-step:last-child { border-bottom: none; }
+.flow-step .stage {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--petrol);
+}
+.flow-step .what { font-size: 0.9rem; color: var(--ink-soft); }
+.flow-step .what b { color: var(--ink); font-weight: 600; }
+
+footer {
+  border-top: 1px solid var(--rule);
+  padding-top: 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink-mute);
+  line-height: 1.9;
+}
+
+@media (max-width: 640px) {
+  .wrap { padding: 2.5rem 1rem 4rem; gap: 2.5rem; }
+  .flow-step { grid-template-columns: 1fr; gap: 0.2rem; }
+  section > h2 { font-size: 1.15rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <div class="kicker">Run 1 · Technical Report</div>
+  <h1>14조 결과기<br>1차 테스트 기술 보고서</h1>
+  <p class="dek">카카오 약관 4종을 파싱·청킹·임베딩해 인덱스를 만들고, 하이브리드 검색과 Qwen2.5 생성으로 답변하는 결과기의 첫 Colab 실행 기록.</p>
+  <div class="meta">
+    <span><b>작성</b> 2026-08-10</span>
+    <span><b>코퍼스</b> 4개 약관 · 72조 · 229항 · 47,733자</span>
+    <span><b>스냅샷</b> e919bd50…71dc</span>
+  </div>
+</header>
+
+<dl class="scoreboard">
+  <div class="score"><dt>hit@1</dt><dd>1.00<small>10문항 전부 1위</small></dd></div>
+  <div class="score"><dt>all-gold R@4</dt><dd>1.00<small>P02 3개 정답 포함</small></dd></div>
+  <div class="score"><dt>MRR</dt><dd>1.00<small>공개 10문항</small></dd></div>
+  <div class="score"><dt>절단 청크</dt><dd>0<small>229개 중 무손실</small></dd></div>
+  <div class="score"><dt>인덱스 크기</dt><dd>0.94<small>MB · 벡터 DB 없음</small></dd></div>
+</dl>
+
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+<h2><span class="num">0</span> 한눈에 보기</h2>
+
+<div class="tablewrap">
+<table>
+<caption>단계별 선택과 근거</caption>
+<thead><tr><th>단계</th><th>선택</th><th>한 줄 근거</th></tr></thead>
+<tbody>
+<tr><td><b>원문 확보</b></td><td>파싱·청킹 완료본을 gzip+base64로 1번 셀에 내장 (88KB)</td><td>런타임 외부 의존 0. 채점 당일 kakao.com 상태와 무관</td></tr>
+<tr><td><b>파싱</b></td><td>정규식 + 문서별 항 마커 분기</td><td>같은 <code>N.</code>이 3개 문서에선 <b>호</b>, 통합약관에선 <b>항</b></td></tr>
+<tr><td><b>청킹</b></td><td>항(229) 임베딩 → 조(72) max 집계</td><td>인용 단위는 조인데, 조 최대 3,482자라 통째로 임베딩 불가</td></tr>
+<tr><td><b>임베딩</b></td><td><code>BAAI/bge-m3</code> · 1024차원 · 8192 컨텍스트</td><td>절단 0건. e5-base는 2청크 절단으로 탈락</td></tr>
+<tr><td><b>저장</b></td><td>벡터 DB 없음 — numpy 229×1024 전수 cosine</td><td>0.94MB. ANN은 정확도만 잃고 속도 이득 0</td></tr>
+<tr><td><b>검색</b></td><td>희소(char n-gram) + 밀집 <b>RRF 결합</b></td><td>숫자·법령 인용은 희소, 표현 차이는 밀집이 잡음</td></tr>
+<tr><td><b>생성</b></td><td><code>Qwen2.5-3B-Instruct</code> 4-bit NF4 · greedy</td><td>규정상 Qwen2.5 계열 필수. 수치 왜곡 방지로 샘플링 차단</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+<h2><span class="num">1</span> 원문 인덱싱</h2>
+
+<h3>1.1 대상 데이터</h3>
+<div class="tablewrap">
+<table>
+<caption>약관 4종 · 원문 해시 고정</caption>
+<thead><tr><th>문서명</th><th>시행일</th><th class="n">조</th><th class="n">항</th><th class="mono">SHA-256</th></tr></thead>
+<tbody>
+<tr><td>카카오계정 약관</td><td class="mono">2026-05-29</td><td class="n">17</td><td class="n">47</td><td class="mono">38510776d7bf…</td></tr>
+<tr><td>카카오 위치정보 이용약관</td><td class="mono">2026-07-16</td><td class="n">16</td><td class="n">43</td><td class="mono">43c357f899df…</td></tr>
+<tr><td>카카오 통합서비스약관</td><td class="mono">2026-05-29</td><td class="n">18</td><td class="n">63</td><td class="mono">f3d9c6341dbd…</td></tr>
+<tr><td>카카오 통합 약관 <span class="chip info">아카이브</span></td><td class="mono">2022-08-25</td><td class="n">21</td><td class="n">76</td><td class="mono">fa97d8138cde…</td></tr>
+<tr><td><b>합계</b></td><td></td><td class="n"><b>72</b></td><td class="n"><b>229</b></td><td>본문 47,733자</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>47,733자는 A4 25쪽 수준이다. <strong>이 규모가 이후 모든 결정을 지배한다</strong> — 인덱싱 비용이 전부 무시 가능하므로 “빠른 근사” 대신 “느려도 정확”을 일관되게 택했다.</p>
+
+<h3>1.2 파싱 — 문서별 규칙 분기</h3>
+<p>네 문서는 겉보기와 달리 <em>“3+1” 구조</em>다. 통합 약관(2022 아카이브)만 표기 체계가 완전히 다르다.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>문서</th><th>조 헤더</th><th>항 마커</th><th>호 마커</th></tr></thead>
+<tbody>
+<tr><td>계정 / 위치정보 / 통합서비스</td><td class="mono">제 1 조 (목적)</td><td class="mono">① ~ ⑳</td><td class="mono">N.</td></tr>
+<tr class="pick"><td><b>통합 약관</b></td><td class="mono">제1조 목적</td><td class="mono"><b>N.</b></td><td>마커 없음</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="note">
+  <span class="label">가장 중요한 파싱 결정</span>
+  <p>같은 <code>N.</code> 마커가 문서에 따라 <b>항이거나 호</b>다. 단일 규칙으로 통일하면 청크 계층이 무너진다. 계정 약관 제12조는 <code>①…아래 각 호의 행위는</code> 뒤에 <code>1. 2. …</code>가 붙는 항–호 구조지만, 통합 약관 제10조는 <code>1. 2. …</code>가 곧 항이다.</p>
+</div>
+
+<pre><code>ART  = r"^제\s*(\d+)\s*조\s*[\(（]?\s*([^)）]*?)\s*[\)）]?\s*$"
+HEAD = {"circled": r"^[①-⑳]",     # 계정 / 위치정보 / 통합서비스
+        "numdot":  r"^\d+\."}      # 통합 약관</code></pre>
+
+<p>조 헤더 정규식은 두 표기를 <code>\s*</code>로 흡수하고, <strong>줄 전체 매칭</strong>이라 본문 중 상호참조(<code>제14조 제1항에 따라…</code>)는 자동 배제된다. <strong>마커 없는 줄은 직전 항에 붙인다</strong> — 통합 약관 제11조 4항(유료서비스 환불)은 <code>4.</code> 아래에 마커 없는 규정 줄이 이어지는데, 이를 떼면 “무슨 환불인지” 문맥을 잃는다.</p>
+
+<h3>1.3 정규화 — 검색에만 영향, 의미는 불변</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>하는 것</th><th>하지 않는 것</th></tr></thead>
+<tbody>
+<tr><td>유니코드 NFC 통일</td><td>숫자 표기 변경</td></tr>
+<tr><td>곡선 따옴표 <code>‘’“”</code> → <code>' "</code></td><td>조사 분리</td></tr>
+<tr><td>중점 <code>・</code>(U+30FB) → <code>·</code>(U+00B7)</td><td>괄호 제거</td></tr>
+<tr><td>연속 공백 축약 · 웹 UI 잔여 문구 제거</td><td>띄어쓰기 교정</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>제16조 제2항</code>, <code>6개월</code>, <code>2시간</code> 같은 토큰이 <strong>그대로 남아야</strong> 희소 검색이 P02·P05를 잡는다. 중점 정규화는 위치정보 약관의 <code>수집·이용·제공</code> 매칭에 직접 영향을 준다(15회 등장).</p>
+
+<h3>1.4 청킹 — small-to-big 두 층</h3>
+<pre><code>조(article) 72개   ← 점수 집계 단위 · 인용 단위 · LLM 근거 단위
+  └ 항(unit) 229개  ← 임베딩 · 희소 인덱싱 단위</code></pre>
+
+<p><strong>왜 두 층인가.</strong> 제출 계약의 <code>retrieved</code>가 <code>[문서명, 조번호]</code>뿐이라 <em>인용 단위는 조로 고정</em>된다. 그런데 조 길이는 p90 1,529자 · 최대 3,482자로 512토큰 모델에 통째로 안 들어간다. 반대로 항을 인용 단위로 쓰면 계약에 항 번호를 담을 자리가 없다.</p>
+
+<div class="tablewrap">
+<table>
+<caption>길이 분포 (문자)</caption>
+<thead><tr><th>지표</th><th class="n">조</th><th class="n">항</th></tr></thead>
+<tbody>
+<tr><td>p50</td><td class="n">549</td><td class="n">157</td></tr>
+<tr><td>p90 / p95</td><td class="n">1,529</td><td class="n">527</td></tr>
+<tr><td>최대</td><td class="n">3,482</td><td class="n">1,812</td></tr>
+</tbody>
+</table>
+</div>
+<p>금지행위 열거 조항은 <strong>호를 쪼개지 않는다.</strong> 항목 하나만 검색되면 무슨 목록인지 알 수 없기 때문이다.</p>
+
+<h3>1.5 검증 게이트 — 통과 못 하면 인덱싱 중단</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>검사</th><th>기대값</th><th>결과</th></tr></thead>
+<tbody>
+<tr><td>조 수</td><td class="mono">17 / 16 / 18 / 21 = 72</td><td><span class="chip ok">통과</span></td></tr>
+<tr><td>항 수</td><td class="mono">47 / 43 / 63 / 76 = 229</td><td><span class="chip ok">통과</span></td></tr>
+<tr><td>조 번호 연속성</td><td>각 문서 <code>1..N</code> 빈틈 없음</td><td><span class="chip ok">통과</span></td></tr>
+<tr><td>청킹 무손실</td><td>항을 합치면 조 본문 완전 복원 (72/72)</td><td><span class="chip ok">통과</span></td></tr>
+<tr><td>골드 커버리지</td><td>공개 골드 12쌍 전부 존재</td><td><span class="chip ok">통과</span></td></tr>
+<tr><td>시행일</td><td>푸터 파싱값 = 상수</td><td><span class="chip ok">통과</span></td></tr>
+<tr><td>원문 해시</td><td>4개 파일 SHA-256 기록</td><td><span class="chip ok">통과</span></td></tr>
+</tbody>
+</table>
+</div>
+<p>이 게이트는 <strong>노트북 1번 셀에서도 재실행된다.</strong> 내장 스냅샷을 풀 때 SHA-256과 조·항 수를 다시 확인하고, 어긋나면 즉시 중단한다.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+<h2><span class="num">2</span> 데이터의 결정적 특성 — 문서 간 중복 조항</h2>
+
+<p>문자 3-gram Jaccard &gt; 0.4인 <strong>문서 간 조문 쌍이 30건</strong>이다.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th class="n">유사도</th><th>조문 A</th><th>조문 B</th></tr></thead>
+<tbody>
+<tr class="pick"><td class="n"><b>0.97</b></td><td>카카오계정 약관 제14조(회원에 대한 통지 및 공지)</td><td>카카오 통합서비스약관 제17조(통지 및 공지)</td></tr>
+<tr><td class="n">0.91</td><td>카카오계정 약관 제13조(개인정보의 보호)</td><td>카카오 통합 약관 제15조(개인정보의 보호)</td></tr>
+<tr><td class="n">0.89</td><td>카카오계정 약관 제17조(분쟁의 해결)</td><td>카카오 통합서비스약관 제18조(분쟁의 해결)</td></tr>
+</tbody>
+</table>
+</div>
+
+<p><strong>공개 골드셋이 이 구조를 정면으로 겨냥한다.</strong></p>
+<ul>
+<li><strong>P02</strong> — 같은 사실(“2시간 이상 지연 시 공지”)이 3개 문서에 있고 <em>셋 다 정답</em>. 문서 다양성을 유지해야 한다.</li>
+<li><strong>P08 (trap)</strong> — <code>제3조 약관 외 준칙</code>은 네 문서 모두에 있는데 <em>통합 약관 것만 정답</em>. 문서를 특정해야 한다.</li>
+</ul>
+
+<p>두 요구가 정반대다. 하드 필터링하면 P02를 놓치고, 아무 신호도 안 주면 P08을 틀린다.</p>
+
+<p><strong>대응</strong> — 모든 임베딩 청크 본문 앞에 문서명과 조 제목을 붙인다.</p>
+<pre><code>embed_text = f"{doc_name} 제{article}조({article_title})\n{unit_text}"</code></pre>
+<p>본문만 임베딩하면 유사도 0.97짜리 두 조문의 벡터가 사실상 구분되지 않는다. 접두어가 붙으면 <code>위치정보</code>·<code>Daum</code>·<code>통합서비스</code> 같은 <strong>문서 고유 어휘가 벡터에 들어가</strong> 순위가 갈린다. 필터가 아니라 <em>신호</em>이므로 P02의 다중 정답도 살아남는다.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+<h2><span class="num">3</span> 임베딩 모델과 저장</h2>
+
+<h3>3.1 모델 선택 — 성능이 아니라 무손실로 결정</h3>
+<div class="tablewrap">
+<table>
+<caption>후보 비교 · 공개 10문항</caption>
+<thead><tr><th>후보</th><th class="n">파라미터</th><th class="n">차원</th><th class="n">컨텍스트</th><th class="n">절단</th><th class="n">hit@1</th><th class="n">MRR</th></tr></thead>
+<tbody>
+<tr><td><code>multilingual-e5-base</code></td><td class="n">278M</td><td class="n">768</td><td class="n">512</td><td class="n"><span class="chip warn">2개</span></td><td class="n">0.90</td><td class="n">0.95</td></tr>
+<tr class="pick"><td><code>BAAI/bge-m3</code> <span class="chip ok">확정</span></td><td class="n">568M</td><td class="n">1024</td><td class="n">8192</td><td class="n"><span class="chip ok">0개</span></td><td class="n">1.00</td><td class="n">1.00</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>e5-base가 자른 2개 청크 — 617토큰 <code>카카오계정 약관 제12조(회원의 의무)</code>, 888토큰 <code>카카오 통합서비스약관 제12조(통합서비스 이용 방법 및 주의점)</code>.</p>
+
+<div class="note">
+  <span class="label">확정 근거는 지표가 아니다</span>
+  <p>지표 차이(hit@1 0.90 → 1.00)는 <b>1문항</b>이며, 공개 10문항은 희소 검색 단독으로도 hit@3 = 1.00인 <b>천장 상태</b>라 모델 우열의 근거가 되지 못한다. 반면 <b>절단은 표본 크기와 무관한 결정론적 사실</b>이다. 확정 근거는 절단 게이트 하나다.</p>
+</div>
+
+<p>8192 컨텍스트의 부수 이득: <strong>2차 분할 로직 자체가 사라진다.</strong> 512토큰 모델을 쓰면 초과 청크를 문장 경계로 나누는 코드, 분할 청크의 부모 재매핑, 경계에서 잘린 문맥 처리가 전부 따라붙는다. 큰 모델을 고르는 것이 코드를 줄였다.</p>
+
+<h3>3.2 저장 — 벡터 DB를 쓰지 않는다</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>구분</th><th class="n">값</th></tr></thead>
+<tbody>
+<tr><td>벡터 수 × 차원</td><td class="n">229 × 1024</td></tr>
+<tr><td>밀집 행렬</td><td class="n">0.94 MB (float32)</td></tr>
+<tr><td>질의당 연산</td><td class="n">23만 FLOP</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>L2 정규화한 numpy 행렬에 행렬곱 한 번이면 <strong>229개 전체에 대한 정확한 cosine 유사도</strong>가 나온다. FAISS·Chroma·Qdrant를 배제한 이유 셋:</p>
+<ol>
+<li><strong>ANN이 해결하는 문제가 없다.</strong> HNSW/IVF는 전수 비교가 감당 안 되는 10만~100만 벡터에서 정확도를 조금 버리고 속도를 얻는 기법이다. 229개에서는 정확도만 버린다.</li>
+<li><strong>제출물이 노트북 1개다.</strong> 외부 DB 파일이나 영속 디렉터리를 둘 자리가 없다.</li>
+<li><strong>의존성이 실패 지점이다.</strong> <code>faiss-cpu</code> 설치 실패나 버전 불일치는 새 Colab 런타임에서 실제로 일어난다.</li>
+</ol>
+<p>임베딩을 미리 계산해 노트북에 넣지도 않았다. <strong>질의 인코딩에 어차피 모델이 필요</strong>하므로, 모델이 메모리에 있으면 229청크 인코딩은 몇 초짜리 초기화 비용에 불과하다.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+<h2><span class="num">4</span> 검색기</h2>
+
+<h3>4.1 두 검색기를 쓰는 이유</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>질문</th><th>결정적 토큰</th><th>밀집 단독 위험</th></tr></thead>
+<tbody>
+<tr><td>P02</td><td class="mono">2시간</td><td>숫자가 벡터에서 희석됨</td></tr>
+<tr><td>P05</td><td class="mono">제16조 제2항 · 6개월</td><td>법령 인용은 위치정보 약관에만 4건</td></tr>
+<tr><td>P07</td><td class="mono">카카오 T택시</td><td>고유명사 · 통합약관에 영문 54건</td></tr>
+</tbody>
+</table>
+</div>
+
+<p><strong>희소</strong> — <code>TfidfVectorizer(analyzer="char_wb", ngram_range=(2,5), sublinear_tf=True)</code>. 문자 n-gram을 쓴 이유는 <strong>형태소 분석기(kiwi, mecab) 설치 없이</strong> 한국어 조사 변형을 흡수하기 위해서다. <code>보관합니다</code> / <code>보관하나요</code> / <code>보관</code>이 모두 부분 매칭된다. 새 Colab에서 형태소 분석기 설치가 실패할 위험도 함께 제거된다.</p>
+
+<h3>4.2 Reciprocal Rank Fusion</h3>
+<p>두 검색기의 <strong>점수 스케일이 다르므로</strong> 점수를 직접 더할 수 없다 — TF-IDF cosine과 bge-m3 cosine은 분포가 다르다. RRF는 점수 대신 <em>순위만</em> 쓴다.</p>
+
+<pre><code>score(조) =  Σ    1 / (k + rank + 1)        k = 60, 상위 8개만 참여
+          검색기별</code></pre>
+
+<ul>
+<li><strong>k = 60</strong> — 상위 순위 가중을 완만하게 하는 표준값. 1위와 2위의 격차를 과장하지 않는다.</li>
+<li><strong>depth = 8</strong> — 각 검색기에서 상위 8개 조만 융합에 참여. 꼬리 잡음 차단.</li>
+<li><strong>동점 처리</strong> — RRF가 같으면 밀집 점수로 가른다(<code>np.lexsort</code>). 두 검색기 모두 상위에 못 올린 조는 융합 점수 0이므로 밀집 순으로 뒤에 붙는다.</li>
+</ul>
+
+<h3>4.3 부모 조 집계 — max, 평균 아님</h3>
+<p><strong>평균을 쓰면 길이가 곧 페널티가 된다.</strong> 긴 조문일수록 질문과 무관한 항을 많이 갖기 때문이다. P09의 정답 <code>카카오 통합 약관 제10조</code>는 1,385자짜리 긴 조문이라 평균 집계에서 불리해진다.</p>
+<pre><code>scores = np.full(n_articles, -np.inf)
+np.maximum.at(scores, parents, unit_scores)   # 항 → 부모 조 max</code></pre>
+
+<h3>4.4 검색 결과</h3>
+<div class="tablewrap">
+<table>
+<caption>공개 10문항 · 고유 골드 12쌍</caption>
+<thead><tr><th>방식</th><th class="n">hit@1</th><th class="n">hit@3</th><th class="n">all-gold R@4</th><th class="n">MRR</th></tr></thead>
+<tbody>
+<tr><td>희소 단독</td><td class="n">0.90</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">0.950</td></tr>
+<tr><td>밀집 단독</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">1.000</td></tr>
+<tr class="pick"><td><b>하이브리드 RRF</b> <span class="chip ok">채택</span></td><td class="n"><b>1.00</b></td><td class="n">1.00</td><td class="n"><b>1.00</b></td><td class="n"><b>1.000</b></td></tr>
+</tbody>
+</table>
+</div>
+
+<p>10문항 전부 정답 조문이 1위. P02의 3개 정답도 상위 3위 안에 모두 회수.</p>
+
+<div class="note">
+  <span class="label">해석 주의</span>
+  <p>희소 단독으로도 hit@3 = 1.00이다. <b>공개셋은 세 방식을 구분하지 못한다.</b> 하이브리드를 채택한 근거는 이 표가 아니라 §4.1의 질의 유형 분석이다 — 비공개 30문항에 숫자·법령 인용이 더 나올 때를 대비한 보험이다.</p>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+<h2><span class="num">5</span> 생성</h2>
+
+<h3>5.1 모델</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>항목</th><th>값</th></tr></thead>
+<tbody>
+<tr><td>모델</td><td><code>Qwen/Qwen2.5-3B-Instruct</code> — 규정상 Qwen2.5-Instruct 계열 필수</td></tr>
+<tr><td>양자화</td><td>4-bit NF4 · compute dtype float16</td></tr>
+<tr><td>디코딩</td><td><b>greedy</b> (<code>do_sample=False</code>)</td></tr>
+<tr><td>max_new_tokens</td><td class="mono">512</td></tr>
+</tbody>
+</table>
+</div>
+
+<p><strong>샘플링을 끈 이유</strong> — 약관 QA는 창의성이 아니라 정확한 전사가 필요하다. 온도를 주면 <code>2시간</code>이 <code>두 시간</code> 또는 <code>3시간</code>으로 바뀔 수 있다. 같은 질문에 같은 답을 내는 재현성도 채점 안정성에 유리하다.</p>
+
+<p>T4에서 bge-m3(약 1.1GB)와 함께 올려야 하므로 3B 4-bit(약 2GB)로 시작했다. Pro+ A100이면 7B로 올릴 여지가 있으나, <strong>채점 런타임이 T4</strong>이므로 T4 기준으로 맞췄다.</p>
+
+<h3>5.2 프롬프트 설계 — 근거 제한 (grounding)</h3>
+<ol>
+<li><strong>제공된 근거 조문에 있는 내용만 사용.</strong> 근거 밖의 사실을 추가하지 않는다.</li>
+<li><strong>숫자·기간·조건·예외는 근거 문장 그대로 옮긴다.</strong> 바꾸거나 반올림하지 않는다.</li>
+<li>여러 약관에 같은 내용이 있으면 실제로 사용한 근거를 모두 남긴다 <span class="chip info">P02 대비</span></li>
+<li>지정된 JSON 형식만 출력한다.</li>
+</ol>
+
+<p>사용자 메시지에는 검색 상위 <strong>4개 조문만</strong> 넣는다. 규정이 “질문과 관계없이 약관 원문 전체를 매 질문의 프롬프트에 넣는 방식”을 금지하기도 하지만, 그보다 <strong>무관한 조문이 생성 근거를 오염시키는 것</strong>이 더 큰 문제다.</p>
+
+<pre><code>[S1] 카카오계정 약관 제10조(사업자/단체 카카오계정)
+①사업자/단체 카카오계정은 …
+
+[S2] …</code></pre>
+
+<h3>5.3 구조화 출력과 근거 선택</h3>
+<p>모델은 <code>{"answer": "...", "used": ["S1", "S3"]}</code> 형태로 답한다. <strong>모델이 실제로 사용한 근거만</strong> <code>retrieved</code>에 남기기 위해서다 — 검색 후보 4개를 그대로 반환하면 계약(“실제 답변에 사용한 근거를 1~4개”)을 위반하고 정밀도가 떨어진다.</p>
+
+<div class="tablewrap">
+<table>
+<caption>파싱 후 검증 · 4개 경로 전부 테스트 완료</caption>
+<thead><tr><th>검사</th><th>처리</th></tr></thead>
+<tbody>
+<tr><td><code>S번호</code>가 실제 후보 범위 밖</td><td>버림</td></tr>
+<tr><td>중복</td><td>제거</td></tr>
+<tr><td>4개 초과</td><td>앞 4개만</td></tr>
+<tr><td>JSON 파싱 실패</td><td>본문을 답변으로 쓰고 근거는 검색 1위로 폴백</td></tr>
+<tr><td><code>used</code>가 빈 배열</td><td>검색 1위로 폴백 — 계약상 최소 1개</td></tr>
+</tbody>
+</table>
+</div>
+<p>어떤 경우에도 <code>retrieved</code>가 <strong>1~4개의 유효한 <code>[문서명, 정수]</code></strong>임을 확인했다.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+<h2><span class="num">6</span> 런타임 구조</h2>
+
+<div class="flow">
+  <div class="flow-step"><span class="stage">install</span><span class="what">sentence-transformers · scikit-learn · accelerate · bitsandbytes</span></div>
+  <div class="flow-step"><span class="stage">snapshot</span><span class="what">내장 gzip+base64 해제 → <b>SHA-256 + 조/항 수 검증</b> — 실패 시 즉시 중단</span></div>
+  <div class="flow-step"><span class="stage">sparse</span><span class="what">TF-IDF 문자 n-gram 인덱스 구축 (229 청크)</span></div>
+  <div class="flow-step"><span class="stage">dense</span><span class="what">bge-m3 로드 → 229청크 인코딩 → numpy 행렬 <b>0.94MB</b></span></div>
+  <div class="flow-step"><span class="stage">generate</span><span class="what">Qwen2.5-3B-Instruct 4-bit 로드</span></div>
+  <div class="flow-step"><span class="stage">serve</span><span class="what">FastAPI — <code>GET /health</code> · <code>POST /answer</code></span></div>
+</div>
+
+<p style="margin-top:0.75rem"><strong>질문마다</strong> — 희소 순위 + 밀집 순위 → RRF → 조 max 집계 → 상위 4개 → Qwen 생성 → JSON 파싱·검증 → <code>{"answer", "retrieved"}</code></p>
+
+<p><strong>모델·인덱스는 서버 기동 전 전역에서 한 번만 초기화한다.</strong> 공통 러너가 동시 요청 2개를 보내지만 <code>_GENERATION_LOCK</code>이 GPU 생성을 직렬화하므로, 질문마다 재다운로드·재임베딩하지 않는다.</p>
+
+<p>노트북 1번 셀 총 <strong>109KB</strong>, 그중 내장 스냅샷이 88KB다.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+<h2><span class="num">7</span> 검증 상태</h2>
+
+<div class="tablewrap">
+<table>
+<caption>검증 완료</caption>
+<thead><tr><th>항목</th><th>방법</th><th>결과</th></tr></thead>
+<tbody>
+<tr><td>파싱·청킹·검증 게이트</td><td>로컬 pytest</td><td><span class="chip ok">27 passed</span></td></tr>
+<tr><td>노트북 1번 셀 검색 경로</td><td>셀 소스를 실제 실행 · 모델만 캐시 대체</td><td><span class="chip ok">hit@1 1.00</span></td></tr>
+<tr><td>스냅샷 왕복</td><td>gzip+base64 복원 후 SHA-256 대조</td><td><span class="chip ok">일치</span></td></tr>
+<tr><td>반환 계약</td><td>4개 파싱 경로</td><td><span class="chip ok">전부 1~4개 유효</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="tablewrap">
+<table>
+<caption>미검증 — 1차 Colab 실행에서 확인할 것</caption>
+<thead><tr><th>항목</th><th>위험</th></tr></thead>
+<tbody>
+<tr><td>Qwen2.5-3B 4-bit 로딩과 T4 VRAM</td><td><span class="chip warn">bge-m3와 동시 상주</span></td></tr>
+<tr><td>실제 생성 품질</td><td><span class="chip warn">로컬에서 Qwen 미실행</span></td></tr>
+<tr><td>JSON 구조화 출력 준수율</td><td><span class="chip warn">3B가 형식을 지키는지</span></td></tr>
+<tr><td>지연시간 p50 / p95</td><td><span class="chip warn">120초 제한</span></td></tr>
+<tr><td><code>bitsandbytes</code> 설치</td><td><span class="chip warn">미확인</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="note">
+  <span class="label">알려진 이슈</span>
+  <p><b>정밀도.</b> 검색 전용 베이스라인은 항상 4개를 반환해 <code>precision@4 = 0.30</code>이었다 — 대부분 문항의 정답은 1개다. 노트북에서는 Qwen이 <code>used</code>로 골라내므로 개선되지만, <b>채점식이 초과 근거를 감점하는지 확인되지 않았다.</b></p>
+  <p><b>공개셋 천장.</b> 공개 10문항은 희소 검색만으로도 포화 상태다. 이 점수로 개선을 판단할 수 없으며, <b>비공개 30문항이 실제 시험</b>이다.</p>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+<h2><span class="num">8</span> 재현</h2>
+
+<pre><code>uv run python -m indexing.build            # 파싱→검증→terms_snapshot.json
+uv run python -m indexing.eval_retrieval   # 모델 비교 → selected_model.json
+uv run python -m indexing.embed            # dense 인덱스 + manifest
+uv run python scripts/build_notebook.py    # 스냅샷을 노트북 1번 셀에 주입
+uv run pytest tests/ -q                    # 27 passed</code></pre>
+
+<div class="tablewrap">
+<table>
+<caption>고정된 아티팩트</caption>
+<thead><tr><th>대상</th><th class="mono">SHA-256 / revision</th></tr></thead>
+<tbody>
+<tr><td><code>terms_snapshot.json</code></td><td class="mono">e919bd50901557c33b5fbbe687744298b81417c4df05411e0747af3f79ce71dc</td></tr>
+<tr><td><code>dense_embeddings.npy</code></td><td class="mono">bab48a740319aa898665e4c13d107a1e6bffa96850d3d8d3001e0f6cb5f50a55</td></tr>
+<tr><td>임베딩 모델 revision</td><td class="mono">5617a9f61b028005a4858fdac845db406aefb181</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<footer>
+14조 · 카카오부트캠프 성능개선대회 · 카카오 약관 QA RAG 결과기<br>
+Run 1 기록 · 2026-08-10 · 코퍼스 72조 229항 47,733자
+</footer>
+
+</div>
