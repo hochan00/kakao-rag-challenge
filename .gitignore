@@ -231,3 +231,6 @@ pdf/
 
 # 인덱싱 생성물
 artifacts/
+
+# Claude Code 로컬 설정(머신 전용)
+.claude/settings.local.json
